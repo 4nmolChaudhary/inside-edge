@@ -2,13 +2,19 @@
 import { authClient } from '@/lib/auth-client'
 import Image from 'next/image'
 
-import PlayerZero from '@/assets/images/player-zero.png'
+import { PROFILE_IMAGES } from '@/constants/images'
 import { UserPen, AlertTriangle } from 'lucide-react'
 
 import { LabelValue } from '@/components/others/label-value'
+import { useState } from 'react'
+import EditProfile from '@/components/profile/edit-profile'
+import { startCase } from 'lodash'
 
 const Profile = () => {
   const { data: session } = authClient.useSession()
+  const [isEditing, setIsEditing] = useState(false)
+
+  if (isEditing) return <EditProfile user={session?.user} onCancel={() => setIsEditing(false)} />
   return (
     <div className='w-full h-[calc(100%-124px)] gap-3 text-2xl font-(family-name:--font-display)'>
       <div className='grid w-full border-b border-primary/50 border-dashed'>
@@ -19,7 +25,7 @@ const Profile = () => {
               <div className='text-sm font-(family-name:--font-inter-tight)'>Complete Your Profile</div>
             </div>
           )}
-          <Image src={PlayerZero} alt='profile picture' className='w-full' />
+          <Image src={PROFILE_IMAGES[Number(session?.user?.image) || 0]} alt='profile picture' className='w-full' />
           <div className='absolute bottom-4 left-4'>
             <LabelValue label='Name' value={session?.user?.name || 'unknown'} valueClassName='text-5xl' />
           </div>
@@ -32,12 +38,12 @@ const Profile = () => {
           </div>
         </div>
         <LabelValue label='Age' value={session?.user?.age || '??'} primaryClassname='col-span-3 p-3 border-b border-r border-primary/50 border-dashed' />
-        <div className='w-full h-full border-b border-primary/50 border-dashed p-4 flex items-center justify-center cursor-pointer'>
+        <div className='w-full h-full border-b border-primary/50 border-dashed p-4 flex items-center justify-center cursor-pointer' onClick={() => setIsEditing(true)}>
           <UserPen size={32} />
         </div>
-        <LabelValue label='Batting Style' value={session?.user?.battingStyle || '??'} primaryClassname='col-span-5 p-3 border-b border-primary/50 border-dashed' />
-        <LabelValue label='Bowling Style' value={session?.user?.bowlingStyle || '??'} primaryClassname='col-span-5 p-3 border-b border-primary/50 border-dashed' />
-        <LabelValue label='Playing Role' value={session?.user?.playingRole || '??'} primaryClassname='col-span-5 p-3' />
+        <LabelValue label='Batting Style' value={startCase(session?.user?.battingStyle || '') || '??'} primaryClassname='col-span-5 p-3 border-b border-primary/50 border-dashed' />
+        <LabelValue label='Bowling Style' value={startCase(session?.user?.bowlingStyle || '') || '??'} primaryClassname='col-span-5 p-3 border-b border-primary/50 border-dashed' />
+        <LabelValue label='Playing Role' value={startCase(session?.user?.playingRole || '') || '??'} primaryClassname='col-span-5 p-3' />
       </div>
     </div>
   )

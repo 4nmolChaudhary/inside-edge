@@ -3,9 +3,8 @@ import { Inter_Tight, Geist_Mono } from 'next/font/google'
 import localFont from 'next/font/local'
 
 import './globals.css'
-import Image from 'next/image'
-import Background from '@/assets/images/background.jpg'
 import { BottomNav } from '@/components/others/bottom-nav'
+import { ReactQueryClientProvider } from '@/components/others/query-client-provider'
 
 const interTight = Inter_Tight({ variable: '--font-inter-tight', subsets: ['latin'] })
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] })
@@ -22,26 +21,28 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang='en'>
-      <head>
-        <link rel='manifest' href='/manifest.json' />
-        <meta name='theme-color' content='#ffffff' />
-        <meta name='mobile-web-app-capable' content='yes' />
-        <meta name='apple-mobile-web-app-capable' content='yes' />
-        <meta name='apple-mobile-web-app-status-bar-style' content='default' />
-      </head>
-      <body className={`${interTight.variable} ${geistMono.variable} ${display.variable} antialiased`}>
-        {/* <Image src={Background} alt='background' fill className='object-cover object-top absolute h-full top-0 right-0 left-0 -z-1 opacity-20 grayscale' /> */}
-        <main className='flex justify-center h-dvh w-full'>
-          <div className='lg:w-132 w-full flex flex-col justify-start z-10 lg:border-x border-neutral-800'>
-            <div className='w-full h-full relative'>
-              {children}
-              <BottomNav />
+    <ReactQueryClientProvider>
+      <html lang='en'>
+        <head>
+          <link rel='manifest' href='/manifest.json' />
+          <meta name='theme-color' content='#ffffff' />
+          <meta name='mobile-web-app-capable' content='yes' />
+          <meta name='apple-mobile-web-app-capable' content='yes' />
+          <meta name='apple-mobile-web-app-status-bar-style' content='default' />
+        </head>
+        <body className={`${interTight.variable} ${geistMono.variable} ${display.variable} antialiased`}>
+          {/* <Image src={Background} alt='background' fill className='object-cover object-top absolute h-full top-0 right-0 left-0 -z-1 opacity-20 grayscale' /> */}
+          <main className='flex justify-center h-dvh w-full'>
+            <div className='lg:w-132 w-full flex flex-col justify-start z-10 lg:border-x border-neutral-800'>
+              <div className='w-full h-full relative'>
+                {children}
+                <BottomNav />
+              </div>
             </div>
-          </div>
-        </main>
-      </body>
-    </html>
+          </main>
+        </body>
+      </html>
+    </ReactQueryClientProvider>
   )
 }
 
