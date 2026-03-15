@@ -8,6 +8,13 @@
       "when": 1772868123439,
       "tag": "0000_crazy_morph",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1773566723857,
+      "tag": "0001_fresh_mister_fear",
+      "breakpoints": true
     }
   ]
 }
