@@ -5,8 +5,13 @@ import { usePathname } from 'next/navigation'
 
 import { cn } from '@/lib/utils'
 
+import { authClient } from '@/lib/auth-client'
+import { USER_ROLES } from '@/constants/player'
+
 export function BottomNav() {
   const pathname = usePathname()
+  const { data: session } = authClient.useSession()
+  const isScorer = session?.user?.role === USER_ROLES.SCORER
   const navItems = [
     { id: 'home', label: 'Home', href: '/' },
     { id: 'fixtures', label: 'Fixtures', href: '/fixtures' },
@@ -22,6 +27,7 @@ export function BottomNav() {
   }
 
   const route = navItems.find(item => navRoutes[item.id as keyof typeof navRoutes].includes(pathname))
+  if (isScorer) return null
   return (
     <nav className='w-full bg-card absolute bottom-0 left-0 right-0 z-20'>
       <div className='grid grid-cols-4 items-center justify-around'>

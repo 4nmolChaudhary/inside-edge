@@ -1,20 +1,22 @@
 'use client'
-import Image from 'next/image'
-import { Button } from '@/components/ui/button'
 
 import { authClient } from '@/lib/auth-client'
 import { X } from 'lucide-react'
-import Login from '@/components/auth/login'
+import { USER_ROLES } from '@/constants/player'
+
+import Main from '@/components/scorer/main'
 
 export default function Home() {
   const { data: session } = authClient.useSession()
-  console.log(session)
+  const isScorer = session?.user?.role === USER_ROLES.SCORER
+
   const date = new Date().toDateString().split(' ')
   function getDayNightEmoji() {
     const hour = new Date().getHours()
     return hour >= 6 && hour < 18 ? '☀️' : '🌙'
   }
 
+  if (isScorer) return <Main />
   return (
     <div className='flex h-dvh flex-col items-center justify-items-center w-full font-(family-name:--font-inter-tight)'>
       <div className='w-full flex items-center justify-between'>

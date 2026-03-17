@@ -1,4 +1,5 @@
 'use client'
+import { useState } from 'react'
 import { authClient } from '@/lib/auth-client'
 import Image from 'next/image'
 
@@ -6,7 +7,6 @@ import { PROFILE_IMAGES } from '@/constants/images'
 import { UserPen, AlertTriangle } from 'lucide-react'
 
 import { LabelValue } from '@/components/others/label-value'
-import { useState } from 'react'
 import EditProfile from '@/components/profile/edit-profile'
 import { startCase } from 'lodash'
 

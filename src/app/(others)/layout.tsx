@@ -1,5 +1,4 @@
 import React from 'react'
-import { ArrowLeft } from 'lucide-react'
 import PageTitle from '@/components/others/page-title'
 
 const BaseLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {

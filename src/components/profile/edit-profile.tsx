@@ -7,6 +7,8 @@ import { TextInput } from '@/components/form/text-input'
 import { ImageSelector } from '@/components/profile/image-selector'
 
 import { BATTING_STYLES, PLAYING_ROLES, BOWLING_STYLES } from '@/constants/player'
+import { PROFILE_IMAGES } from '@/constants/images'
+
 import { upperCase } from 'lodash'
 import { cn } from '@/lib/utils'
 
@@ -39,7 +41,9 @@ const EditProfile = ({ user, onCancel }: { user: User | undefined; onCancel: () 
     <div className='w-full h-[calc(100%-124px)] gap-3 text-2xl font-(family-name:--font-display) overflow-y-auto'>
       <div className='text-3xl font-(family-name:--font-display) tracking-tight uppercase p-4 pb-0'>edit profile</div>
       <div className='mb-4 text-sm text-neutral-500 font-(family-name:--font-inter-tight) px-4'>Enter your details to update your profile</div>
-      <ImageSelector currentIndex={form.image} onIndexChange={index => setForm(prev => ({ ...prev, image: index }))} className='mb-4' />
+      <div className='p-4'>
+        <ImageSelector images={PROFILE_IMAGES} currentIndex={form.image} onIndexChange={index => setForm(prev => ({ ...prev, image: index }))} className='h-56' />
+      </div>
       <div className='grid grid-cols-2 gap-x-4 px-4'>
         <TextInput label='Jersey #' placeholder='45' type='number' value={form.jerseyNumber} onChange={e => setForm(prev => ({ ...prev, jerseyNumber: e.target.value }))} containerClasses='w-full' />
         <TextInput label='Age' placeholder='25' type='number' value={form.age} onChange={e => setForm(prev => ({ ...prev, age: e.target.value }))} containerClasses='w-full' />
