@@ -19,4 +19,4 @@ import Team35 from '@/assets/images/teams/35.jpg'
 
 export const PROFILE_IMAGES = [PlayerZero, PlayerOne, PlayerTwo, PlayerThree, PlayerFour]
 export const TEAM_IMAGES = [Team26, Team27, Team28, Team29, Team30, Team31, Team32, Team33, Team34, Team35]
-export const TEAM_COLORS = ['#056839', '#ffc718', '#28a745', '#ffc107', '#ffc718', '#6f42c1', '#17a2b8', '#20c997', '#fd7e14', 'rgb(255 76 2)']
+export const TEAM_COLORS = ['#056839', '#ffc718', '#28a745', 'rgb(170 67 199)', '#ffc718', 'rgb(255 172 50)', 'rgb(184 182 196)', 'rgb(255 41 111)', 'rgb(255 138 0)', 'rgb(255 76 2)']

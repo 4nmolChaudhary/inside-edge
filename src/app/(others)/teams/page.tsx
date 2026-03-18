@@ -11,7 +11,7 @@ import Image from 'next/image'
 const Page = () => {
   const { data } = useTeams()
   const [isEditing, setIsEditing] = useState(false)
-
+  console.log(data)
   if (isEditing) return <AddEditTeam onCancel={() => setIsEditing(false)} />
   return (
     <div className='w-full flex flex-col gap-3 text-2xl font-(family-name:--font-display)'>
@@ -22,7 +22,7 @@ const Page = () => {
         </div>
         <Button onClick={() => setIsEditing(true)} className='flex items-center cursor-pointer' text='Add team' />
       </div>
-      <div className='w-full h-[calc(100%-100px)] text-2xl font-(family-name:--font-display) overflow-y-auto grid grid-cols-2 gap-4 p-4 pt-0'>
+      <div className='w-full h-[calc(100vh-170px)] text-2xl font-(family-name:--font-display) overflow-y-auto grid grid-cols-2 gap-4 p-4 pt-0 scrollbar-hide'>
         {data?.map(team => (
           <div key={team.id} className='flex p-4 items-center flex-col cursor-pointer' style={{ backgroundColor: TEAM_COLORS[Number(team.logo) || 0] }}>
             <Image src={TEAM_IMAGES[Number(team.logo) || 0]} alt='team picture' className='w-32 aspect-square object-cover' />

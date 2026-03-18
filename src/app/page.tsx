@@ -31,12 +31,6 @@ export default function Home() {
           <X />
         </div>
       </div>
-      {/* <div className='w-full flex flex-col gap-3 justify-center'>
-              <h2 className='text-3xl md:text-6xl font-(family-name:--font-display) tracking-tight uppercase'>🔰 Titans</h2>
-              <div className='mb-2 text-sm opacity-75 font-(family-name:--font-geist-mono)'>A powerful fitness companion designed to track, analyze, and optimize your training progress. Simple, intuitive, and built to help you achieve your fitness goals.</div>
-              <Button className='mb-4 cursor-pointer rounded-0! font-(family-name:--font-display) uppercase text-base'>Start Now 🔥</Button>
-            </div> */}
-      {/* <div className='px-2 py-6 mb-2 text-sm text-center opacity-75 font-(family-name:--font-geist-mono)'>Track every session, stay consistent, and see real progress. For free. Forever.</div> */}
     </div>
   )
 }
