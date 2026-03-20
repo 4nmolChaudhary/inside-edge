@@ -25,7 +25,7 @@ const Profile = () => {
               <div className='text-sm font-(family-name:--font-inter-tight)'>Complete Your Profile</div>
             </div>
           )}
-          <Image src={PROFILE_IMAGES[Number(session?.user?.image) || 0]} alt='profile picture' className='w-full' />
+          <Image src={PROFILE_IMAGES[Number(session?.user?.image) || 0]} alt='profile picture' className='w-5/6 mx-auto' />
           <div className='absolute bottom-4 left-4'>
             <LabelValue label='Name' value={session?.user?.name || 'unknown'} valueClassName='text-5xl' />
           </div>

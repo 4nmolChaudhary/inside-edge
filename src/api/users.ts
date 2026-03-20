@@ -1,6 +1,6 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 
-import { updateUser } from '@/db/queries/users'
+import { getUsers, updateUser } from '@/db/queries/users'
 
 import { UpdateUserInput } from '@/types/user'
 
@@ -9,4 +9,8 @@ export const useUpdateUser = (props: { onSuccess?: () => void; onError?: () => v
     mutationFn: ({ id, updates }: UpdateUserInput) => updateUser(id, updates),
     ...props,
   })
+}
+
+export const useUsers = () => {
+  return useQuery({ queryKey: ['users'], queryFn: getUsers })
 }
