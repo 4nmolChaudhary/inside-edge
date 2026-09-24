@@ -1,34 +1,19 @@
 'use client'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
-import { authClient } from '@/lib/auth-client'
-import { X } from 'lucide-react'
-import { USER_ROLES } from '@/constants/player'
-
-import Main from '@/components/scorer/main'
+import { Button } from '@/components/form/button'
+import Logo from '@/assets/images/logo.png'
 
 export default function Home() {
-  const { data: session } = authClient.useSession()
-  const isScorer = session?.user?.role === USER_ROLES.SCORER
-
-  const date = new Date().toDateString().split(' ')
-  function getDayNightEmoji() {
-    const hour = new Date().getHours()
-    return hour >= 6 && hour < 18 ? '☀️' : '🌙'
-  }
-
-  if (isScorer) return <Main />
+  const router = useRouter()
   return (
-    <div className='flex h-dvh flex-col items-center justify-items-center w-full font-(family-name:--font-inter-tight)'>
-      <div className='w-full flex items-center justify-between'>
-        <div className='flex flex-col'>
-          <div className='text-sm text-neutral-200'>
-            {date[0]} {getDayNightEmoji()}
-          </div>
-          <div className='text-sm opacity-90'>{`${date[2]} ${date[1]}, ${date[3]}`}</div>
-          <div className='mb-2 text-sm opacity-75 font-(family-name:--font-geist-mono)'>ICC Men's T20 World Cup, 2026 Super 8</div>
-        </div>
-        <div className='w-16 h-16 rounded-full bg-card flex items-center justify-center cursor-pointer'>
-          <X />
+    <div className='w-full flex justify-center font-(family-name:--font-display) bg-sporty-red'>
+      <div className='lg:w-132 flex h-dvh flex-col gap-8 justify-center w-full'>
+        <Image src={Logo} alt='logo' loading='eager' />
+        <div className='w-full flex flex-col items-center text-center uppercase text-6xl'>Every Ball Counts When You're Playing Like Kings.</div>
+        <div className='w-full flex justify-center'>
+          <Button type='button' text='Continue' onClick={() => router.push('/arena')} />
         </div>
       </div>
     </div>

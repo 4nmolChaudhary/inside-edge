@@ -35,8 +35,8 @@ const Login = ({ onRegister }: { onRegister: () => void }) => {
 
   return (
     <div className='w-full p-6'>
-      <h2 className='text-3xl md:text-6xl font-(family-name:--font-display) tracking-tight uppercase'>Login</h2>
-      <span className='mb-4 text-center text-sm text-neutral-500 font-(family-name:--font-inter-tight)'>Enter your email below to login to your account</span>
+      <h2 className='text-3xl md:text-6xl font-(family-name:--font-display) uppercase'>Login</h2>
+      <span className='mb-4 text-center text-sm text-neutral-500 font-(family-name:--font-regular)'>Enter your email below to login to your account</span>
       <form className='w-full' onSubmit={handleSubmit(onSubmit)}>
         <TextInput error={errors.email} {...register('email')} label='Email' placeholder='john@email.com' autoComplete='new-password' containerClasses='mt-2' />
         <TextInput error={errors.password} {...register('password')} id={id} label='Password' placeholder='*********' autoComplete='new-password' type={isVisible ? 'text' : 'password'} containerClasses='relative mb-4'>

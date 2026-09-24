@@ -27,7 +27,7 @@ export function BottomNav() {
   }
 
   const route = navItems.find(item => navRoutes[item.id as keyof typeof navRoutes].includes(pathname))
-  if (isScorer) return null
+  if (isScorer || pathname === '/auth') return null
   return (
     <nav className='w-full bg-card absolute bottom-0 left-0 right-0 z-20'>
       <div className='grid grid-cols-4 items-center justify-around'>
