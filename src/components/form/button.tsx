@@ -1,6 +1,5 @@
 import React from 'react'
 import { Button as ButtonBase } from '@/components/ui/button'
-import { Loader2 } from 'lucide-react'
 
 type ButtonProps = React.ComponentProps<'button'> & {
   className?: string
@@ -13,7 +12,6 @@ type ButtonProps = React.ComponentProps<'button'> & {
 export const Button = ({ className, loading, text, loadingText, ...rest }: ButtonProps) => {
   return (
     <ButtonBase disabled={loading || rest?.disabled} className={`rounded-xl min-w-1/2 bg-black text-5xl! cursor-pointer px-4 py-3 ${className}`} {...rest}>
-      {loading ? <Loader2 className='h-4 w-4 animate-spin' /> : ''}
       <span>{loading ? loadingText : text}</span>
     </ButtonBase>
   )

@@ -1,32 +1,31 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { addTeam, getTeams, updateTeam } from '@/db/queries/teams'
+import { addTeam, getTeamsByArena } from '@/db/queries/teams'
+import { toast } from '@/components/ui/toast'
 
-const TEAMS_KEY = ['teams']
-
-export const useTeams = () => {
-  return useQuery({ queryKey: TEAMS_KEY, queryFn: getTeams })
-}
-
-export const useAddTeam = ({ onSuccess }: { onSuccess?: () => void }) => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: (payload: { name: string; image: number }) => addTeam(payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: TEAMS_KEY })
-      onSuccess?.()
-    },
+export const useTeams = (arenaId?: string) => {
+  return useQuery({
+    queryKey: ['teams', arenaId],
+    queryFn: () => getTeamsByArena(arenaId!),
+    enabled: !!arenaId,
   })
 }
 
-export const useUpdateTeam = ({ onSuccess }: { onSuccess?: () => void }) => {
+export const useAddTeam = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
   const queryClient = useQueryClient()
-
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: { name: string; logo: number } }) => updateTeam(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: TEAMS_KEY })
+    mutationFn: async (input: Parameters<typeof addTeam>[0]) => {
+      const result = await addTeam(input)
+      if (result.error) throw new Error(result.error)
+      return result.team
+    },
+    onMutate: () => toast.add({ type: 'loading', title: 'Adding team...', timeout: 0 }),
+    onSuccess: (_team, _input, toastId) => {
+      if (toastId) toast.update(toastId, { type: 'success', title: 'Team added', timeout: 4000 })
+      queryClient.invalidateQueries({ queryKey: ['teams'] })
       onSuccess?.()
+    },
+    onError: (error, _input, toastId) => {
+      if (toastId) toast.update(toastId, { type: 'error', title: error.message, timeout: 5000, priority: 'high' })
     },
   })
 }

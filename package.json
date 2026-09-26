@@ -13,6 +13,7 @@
     "db:update": "npm run db:generate && npm run db:migrate"
   },
   "dependencies": {
+    "@base-ui/react": "^1.8.0",
     "@better-auth/drizzle-adapter": "^1.7.5",
     "@hookform/resolvers": "^5.9.1",
     "@tanstack/react-query": "^5.103.1",

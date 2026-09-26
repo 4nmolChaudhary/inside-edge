@@ -1,5 +1,4 @@
 'use client'
-import { authClient } from '@/lib/auth-client'
 import { ArrowUpRight } from 'lucide-react'
 
 import { useRouter } from 'next/navigation'
@@ -16,7 +15,7 @@ const Card = ({ title, className, bg, onClick }: { title: string; bg: string; cl
 }
 const Main = () => {
   const router = useRouter()
-  const logOut = async () => await authClient.signOut({ fetchOptions: { onSuccess: () => router.push('/') } })
+  const logOut = async () => {}
   const redirectTo = (path: string) => router.push(`/${path}`)
   return (
     <div className='w-full h-full p-4 grid grid-cols-2 grid-rows-3 gap-4'>

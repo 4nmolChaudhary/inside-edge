@@ -1,23 +1,28 @@
-'use client'
+import type { StaticImageData } from 'next/image'
 
-import PlayerZero from '@/assets/images/player-zero.png'
-import PlayerOne from '@/assets/images/player-one.png'
-import PlayerTwo from '@/assets/images/player-two.png'
-import PlayerThree from '@/assets/images/player-three.png'
-import PlayerFour from '@/assets/images/player-four.png'
-import PlayerFive from '@/assets/images/player-five.png'
+import Bears from '@/assets/images/teams/bears.png'
+import Bulls from '@/assets/images/teams/bulls.png'
+import Jaguars from '@/assets/images/teams/jaguars.png'
+import Panthers from '@/assets/images/teams/panthers.png'
+import Rhinos from '@/assets/images/teams/rhinos.png'
+import Tigers from '@/assets/images/teams/tigers.png'
 
-import Team26 from '@/assets/images/teams/26.png'
-import Team27 from '@/assets/images/teams/27.png'
-import Team28 from '@/assets/images/teams/28.png'
-import Team29 from '@/assets/images/teams/29.png'
-import Team30 from '@/assets/images/teams/30.png'
-import Team31 from '@/assets/images/teams/31.png'
-import Team32 from '@/assets/images/teams/32.png'
-import Team33 from '@/assets/images/teams/33.png'
-import Team34 from '@/assets/images/teams/34.png'
-import Team35 from '@/assets/images/teams/35.jpg'
+// keyed by the teams.logo_url value (image name without extension)
+export const TEAM_IMAGES: Record<string, StaticImageData> = {
+  bears: Bears,
+  bulls: Bulls,
+  jaguars: Jaguars,
+  panthers: Panthers,
+  rhinos: Rhinos,
+  tigers: Tigers,
+}
 
-export const PROFILE_IMAGES = [PlayerZero, PlayerOne, PlayerTwo, PlayerThree, PlayerFour, PlayerFive]
-export const TEAM_IMAGES = [Team26, Team27, Team28, Team29, Team30, Team31, Team32, Team33, Team34, Team35]
-export const TEAM_COLORS = ['#056839', '#ffc718', '#28a745', 'rgb(170 67 199)', '#ffc718', 'rgb(255 172 50)', 'rgb(184 182 196)', 'rgb(255 41 111)', 'rgb(255 138 0)', 'rgb(255 76 2)']
+export const TEAM_COLORS: Record<string, string> = {
+  bears: '#ff4c02',
+  bulls: '#056839',
+  jaguars: '#ffc718',
+  panthers: '#ff296f',
+  rhinos: '#b8b6c4',
+  tigers: '#ffac32',
+}
+

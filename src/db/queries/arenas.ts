@@ -16,6 +16,7 @@ export const addArena = async ({ code }: { code: string }) => {
 
 export const verifyArenaCode = async (code: string) => {
   const arena = await getArenaByCode(code)
-  return arena.code === code
+  if (!arena) return null
+  return { id: arena.id, code: arena.code }
 }
 
