@@ -9,7 +9,7 @@ const TIME_ZONE = 'Asia/Kolkata'
 
 const todaysCode = () => new Intl.DateTimeFormat('en-GB', { timeZone: TIME_ZONE, day: '2-digit', month: '2-digit', year: '2-digit' }).format(new Date()).replaceAll('/', '')
 
-const sign = (expiresAt: string) => createHmac('sha256', process.env.BETTER_AUTH_SECRET!).update(expiresAt).digest('hex')
+const sign = (expiresAt: string) => createHmac('sha256', process.env.AUTH_SECRET!).update(expiresAt).digest('hex')
 
 export const authorize = async (code: string) => {
   if (code !== todaysCode()) return false
