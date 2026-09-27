@@ -9,7 +9,7 @@ const Players = async ({ searchParams }: { searchParams: Promise<{ arena?: strin
   const players = arena ? await getPlayersByArena(arena) : []
 
   return (
-    <div className='w-full flex justify-center font-(family-name:--font-display) bg-card'>
+    <div className='w-full flex justify-center font-(family-name:--font-display) bg-card scrollbar-hide overflow-auto'>
       <div className='w-full h-full bg-cover absolute top-0 left-0 z-0 bg-[url(/images/bg-card-one.jpg)] opacity-5'></div>
       <div className='lg:w-132 h-dvh w-full flex flex-col z-10'>
         <div className='flex items-center gap-3 p-4 pb-3'>
@@ -19,7 +19,7 @@ const Players = async ({ searchParams }: { searchParams: Promise<{ arena?: strin
           <span className='text-5xl uppercase leading-none text-white'>Players</span>
         </div>
         {players.length > 0 ? (
-          <div className='grid flex-1 grid-cols-2 content-start gap-3 overflow-y-auto p-4 pt-1 scrollbar-hide'>
+          <div className='grid grid-cols-2 content-start gap-3 p-4 pt-1'>
             {players.map(player => (
               <PlayerCard key={player.id} player={player} />
             ))}
