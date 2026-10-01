@@ -48,8 +48,8 @@ export const MoreMenu = ({ isAuthenticated, arenaId }: { isAuthenticated: boolea
       <button type='button' disabled className={cn(tileClass, disabledClass)}>
         <Tile name='Add Team' subText='Coming soon' image={AddUpdateTeam} />
       </button>
-      {isAuthenticated ? (
-        <Link href='/scoring' className={tileClass}>
+      {canManage ? (
+        <Link href={`/scoring?arena=${arenaId}`} className={tileClass}>
           <Tile name='Start Scoring' image={StartScoring} />
         </Link>
       ) : (
