@@ -3,17 +3,16 @@ import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 
 import { getMatchDetail } from '@/db/queries/matches'
-import { isAuthorized } from '@/lib/authorize'
 import { TeamBadge } from '@/components/matches/team-badge'
+import { formatOvers } from '@/lib/cricket'
 
-const MatchScore = async ({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ arena?: string }> }) => {
+const MatchLive = async ({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ arena?: string }> }) => {
   const { id } = await params
   const { arena } = await searchParams
-  if (!(await isAuthorized())) redirect(arena ? `/matches/${id}/live?arena=${arena}` : `/matches/${id}/live`)
-
   const match = arena ? await getMatchDetail(id, arena) : null
 
-  if (arena && match && match.status === 'setup') redirect(`/scoring/${id}?arena=${arena}`)
+  if (arena && match && match.status === 'setup') redirect(`/fixtures?arena=${arena}`)
+  if (arena && match && match.status === 'completed') redirect(`/matches/${id}?arena=${arena}`)
 
   const battingFirstTeam = match ? (match.battingFirstId === match.teamA.id ? match.teamA : match.teamB) : null
   const bowlingFirstTeam = match && battingFirstTeam ? (battingFirstTeam.id === match.teamA.id ? match.teamB : match.teamA) : null
@@ -33,15 +32,21 @@ const MatchScore = async ({ params, searchParams }: { params: Promise<{ id: stri
         ) : (
           <div className='flex flex-1 flex-col gap-6 p-4'>
             <div className='flex items-center justify-between gap-4 rounded-xl bg-white/5 p-4'>
-              <TeamBadge name={match.teamA.name} shortName={match.teamA.shortName} logoUrl={match.teamA.logoUrl} />
-              <span className='text-lg text-white/60 uppercase'>vs</span>
-              <TeamBadge name={match.teamB.name} shortName={match.teamB.shortName} logoUrl={match.teamB.logoUrl} />
-            </div>
-            <div className='text-center text-lg text-white/70 uppercase'>
-              {battingFirstTeam?.name} won the toss and chose to {match.tossDecision}
+              <div className='flex flex-col items-start gap-1'>
+                <TeamBadge name={match.teamA.name} shortName={match.teamA.shortName} logoUrl={match.teamA.logoUrl} />
+                <span className='text-2xl text-white'>
+                  {match.teamARuns}/{match.teamAWickets} <span className='text-sm text-white/50'>({formatOvers(match.teamABalls)})</span>
+                </span>
+              </div>
+              <div className='flex flex-col items-end gap-1'>
+                <TeamBadge name={match.teamB.name} shortName={match.teamB.shortName} logoUrl={match.teamB.logoUrl} />
+                <span className='text-2xl text-white'>
+                  {match.teamBRuns}/{match.teamBWickets} <span className='text-sm text-white/50'>({formatOvers(match.teamBBalls)})</span>
+                </span>
+              </div>
             </div>
             <div className='text-center text-2xl text-lime uppercase'>{currentBattingTeam?.name} are batting</div>
-            <div className='flex flex-1 items-center justify-center text-center text-2xl text-white/60 uppercase'>Ball-by-ball scoring coming soon</div>
+            <div className='flex flex-1 items-center justify-center text-center text-2xl text-white/60 uppercase'>Ball-by-ball commentary coming soon</div>
           </div>
         )}
       </div>
@@ -49,5 +54,4 @@ const MatchScore = async ({ params, searchParams }: { params: Promise<{ id: stri
   )
 }
 
-export default MatchScore
-
+export default MatchLive

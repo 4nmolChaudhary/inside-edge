@@ -5,8 +5,9 @@ import { toast } from '@/components/ui/toast'
 export const useAuthorize = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
   return useMutation({
     mutationFn: async (code: string) => {
-      const authorized = await authorize(code)
-      if (!authorized) throw new Error('Invalid code')
+      const result = await authorize(code)
+      if (result === 'invalid') throw new Error('Invalid code')
+      if (result === 'taken') throw new Error('Another user is already authorized')
     },
     onMutate: () => toast.add({ type: 'loading', title: 'Verifying code...', timeout: 0 }),
     onSuccess: (_data, _code, toastId) => {

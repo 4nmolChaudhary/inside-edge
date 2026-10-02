@@ -25,11 +25,13 @@ const battingTeamOf = (match: MatchRow) => {
   return match.currentInnings === 1 ? battingFirst : bowlingFirst
 }
 
-export const MatchCard = ({ match, arenaId }: { match: MatchRow; arenaId: string }) => {
+export const MatchCard = ({ match, arenaId, isAuthenticated }: { match: MatchRow; arenaId: string; isAuthenticated: boolean }) => {
   const isSetup = match.status === 'setup'
   const isLive = match.status === 'live'
 
-  const href = isSetup ? `/scoring/${match.id}?arena=${arenaId}` : isLive ? `/matches/${match.id}/score?arena=${arenaId}` : `/matches/${match.id}?arena=${arenaId}`
+  // Authorized users score a live match; everyone else just watches it ball by ball.
+  const liveHref = isAuthenticated ? `/matches/${match.id}/score?arena=${arenaId}` : `/matches/${match.id}/live?arena=${arenaId}`
+  const href = isSetup ? `/scoring/${match.id}?arena=${arenaId}` : isLive ? liveHref : `/matches/${match.id}?arena=${arenaId}`
   const dateTime = formatMatchDateTime(isLive ? (match.startedAt ?? match.createdAt) : isSetup ? match.createdAt : (match.completedAt ?? match.createdAt))
 
   const battingTeam = isLive ? battingTeamOf(match) : null

@@ -25,9 +25,9 @@ const Fixtures = async ({ searchParams }: { searchParams: Promise<{ arena?: stri
           <div className='flex flex-1 items-center justify-center p-4 text-center text-3xl uppercase text-white/60'>No matches yet</div>
         ) : (
           <div className='flex flex-1 flex-col gap-5 overflow-auto p-4 pt-0'>
-            {!!live.length && live.map(match => <MatchCard key={match.id} match={match} arenaId={arena} />)}
-            {!!setup.length && setup.map(match => <MatchCard key={match.id} match={match} arenaId={arena} />)}
-            {!!past.length && past.map(match => <MatchCard key={match.id} match={match} arenaId={arena} />)}
+            {!!live.length && live.map(match => <MatchCard key={match.id} match={match} arenaId={arena} isAuthenticated={isAuthenticated} />)}
+            {!!setup.length && setup.map(match => <MatchCard key={match.id} match={match} arenaId={arena} isAuthenticated={isAuthenticated} />)}
+            {!!past.length && past.map(match => <MatchCard key={match.id} match={match} arenaId={arena} isAuthenticated={isAuthenticated} />)}
           </div>
         )}
       </div>

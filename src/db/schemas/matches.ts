@@ -1,4 +1,4 @@
-import { pgTable, pgEnum, uuid, varchar, smallint, timestamp, index, check } from 'drizzle-orm/pg-core'
+import { pgTable, pgEnum, uuid, varchar, smallint, text, boolean, timestamp, index, check } from 'drizzle-orm/pg-core'
 import { relations, sql } from 'drizzle-orm'
 
 import { arenas } from '@/db/schemas/arena'
@@ -26,6 +26,8 @@ export const matches = pgTable(
     overs: smallint('overs').notNull(),
 
     // Step 2: squads, stored as arrays instead of a join table (saves ~22 rows per match)
+    // RULE: once status = 'live' these are APPEND-ONLY (never reorder/remove);
+    // ball tokens reference players by their index in these arrays.
     teamAPlayerIds: uuid('team_a_player_ids')
       .array()
       .notNull()
@@ -46,8 +48,19 @@ export const matches = pgTable(
     status: matchStatus('status').notNull().default('setup'),
     currentInnings: smallint('current_innings').notNull().default(1), // 1 or 2
 
+    // Ball-by-ball log, one compact token per delivery (format: see pass3-schema.ts)
+    // inn1 = batting_first team, inn2 = the other team
+    inn1Balls: text('inn1_balls')
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
+    inn2Balls: text('inn2_balls')
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
+
     // Score summary cache, so the fixtures list needs NO joins/aggregation.
-    // Pass 3's ball-by-ball inserts will update these.
+    // Updated in the same UPDATE that appends a ball token.
     teamARuns: smallint('team_a_runs').notNull().default(0),
     teamAWickets: smallint('team_a_wickets').notNull().default(0),
     teamABalls: smallint('team_a_balls').notNull().default(0), // legal balls → overs = floor(b/6).(b%6)
@@ -58,6 +71,9 @@ export const matches = pgTable(
     // Result
     winnerId: uuid('winner_id').references(() => teams.id), // null + completed = tie
     resultText: varchar('result_text', { length: 100 }), // "Tigers won by 12 runs"
+
+    // Guards against adding a match to player_stats twice
+    statsApplied: boolean('stats_applied').notNull().default(false),
 
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     startedAt: timestamp('started_at', { withTimezone: true }),
