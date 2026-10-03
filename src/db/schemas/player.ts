@@ -64,6 +64,8 @@ export const playerStats = pgTable(
     bestWickets: smallint('best_wickets').notNull().default(0),
     bestRuns: smallint('best_runs').notNull().default(0), // best figures = bestWickets/bestRuns
     threeWicketHauls: smallint('three_wicket_hauls').notNull().default(0),
+    // Awards
+    playerOfMatch: smallint('player_of_match').notNull().default(0),
 
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },

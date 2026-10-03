@@ -9,7 +9,7 @@ import CharacterFive from '@/assets/images/character-5.png'
 import CharacterSix from '@/assets/images/character-6.png'
 
 const tiles = [
-  { id: 'fixtures', name: 'Fixtures', href: '/fixtures', image: CharacterTwo, className: 'col-span-2', imageClass: 'scale-110 right-5 bottom-2' },
+  { id: 'fixtures', name: 'Fixtures & Results', href: '/fixtures', image: CharacterTwo, className: 'col-span-2', imageClass: 'scale-110 right-5 bottom-2' },
   { id: 'teams', name: 'Teams', href: '/teams', image: CharacterThree, className: '', imageClass: '' },
   { id: 'players', name: 'Players', href: '/players', image: CharacterFour, className: '', imageClass: '' },
   { id: 'stats', name: 'Stats', href: '/stats', image: CharacterFive, className: '', imageClass: 'scale-125 right-3 bottom-2' },

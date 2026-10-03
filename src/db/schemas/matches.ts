@@ -46,7 +46,7 @@ export const matches = pgTable(
 
     // Step 4: live state
     status: matchStatus('status').notNull().default('setup'),
-    currentInnings: smallint('current_innings').notNull().default(1), // 1 or 2
+    currentInnings: smallint('current_innings').notNull().default(1), // 1-2 regular, 3-4 super over (tie breaker)
 
     // Ball-by-ball log, one compact token per delivery (format: see pass3-schema.ts)
     // inn1 = batting_first team, inn2 = the other team
@@ -55,6 +55,18 @@ export const matches = pgTable(
       .notNull()
       .default(sql`'{}'::text[]`),
     inn2Balls: text('inn2_balls')
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
+
+    // Super over after a tied match: one over each, same token format.
+    // super1 = the team that batted 2nd in the match (innings 3), super2 = the team that batted 1st (innings 4).
+    // Not part of the team score cache below or of player_stats.
+    super1Balls: text('super1_balls')
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
+    super2Balls: text('super2_balls')
       .array()
       .notNull()
       .default(sql`'{}'::text[]`),
@@ -71,6 +83,7 @@ export const matches = pgTable(
     // Result
     winnerId: uuid('winner_id').references(() => teams.id), // null + completed = tie
     resultText: varchar('result_text', { length: 100 }), // "Tigers won by 12 runs"
+    playerOfMatchId: uuid('player_of_match_id').references(() => players.id), // top performer by the POTM points formula, set on completion
 
     // Guards against adding a match to player_stats twice
     statsApplied: boolean('stats_applied').notNull().default(false),
@@ -79,7 +92,7 @@ export const matches = pgTable(
     startedAt: timestamp('started_at', { withTimezone: true }),
     completedAt: timestamp('completed_at', { withTimezone: true }),
   },
-  t => [index('matches_arena_status_idx').on(t.arenaId, t.status, t.createdAt), check('matches_diff_teams', sql`${t.teamAId} <> ${t.teamBId}`), check('matches_innings', sql`${t.currentInnings} in (1, 2)`)],
+  t => [index('matches_arena_status_idx').on(t.arenaId, t.status, t.createdAt), check('matches_diff_teams', sql`${t.teamAId} <> ${t.teamBId}`), check('matches_innings', sql`${t.currentInnings} in (1, 2, 3, 4)`)],
 )
 
 export const matchesRelations = relations(matches, ({ one }) => ({

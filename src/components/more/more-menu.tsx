@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 
 import { cn } from '@/lib/utils'
 import useDialogState from '@/hooks/use-dialog-state'
+import { useDeauthorize } from '@/api/authorize'
 import { AuthorizeDialog } from '@/components/more/authorize-dialog'
 import { AddPlayerDialog } from '@/components/more/add-player-dialog'
 import Authorize from '@/assets/images/authorize.png'
@@ -37,10 +38,12 @@ export const MoreMenu = ({ isAuthenticated, arenaId }: { isAuthenticated: boolea
     router.refresh()
   }
 
+  const { mutate: logOut, isPending: loggingOut } = useDeauthorize({ onSuccess: () => router.refresh() })
+
   return (
     <>
-      <button type='button' disabled={isAuthenticated} onClick={onOpenChange} className={cn(tileClass, isAuthenticated && 'cursor-default active:scale-100')}>
-        <Tile name={isAuthenticated ? 'Authorized' : 'Authorize'} image={Authorize} />
+      <button type='button' disabled={loggingOut} onClick={isAuthenticated ? () => logOut() : onOpenChange} className={cn(tileClass, loggingOut && 'opacity-60')}>
+        <Tile name={isAuthenticated ? 'Log out' : 'Authorize'} subText={isAuthenticated ? 'Authorized' : undefined} image={Authorize} />
       </button>
       <button type='button' disabled={!canManage} onClick={playerDialog.onOpenChange} className={cn(tileClass, !canManage && disabledClass)}>
         <Tile name='Add Player' image={AddUpdatePlayer} />

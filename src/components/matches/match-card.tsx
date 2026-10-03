@@ -22,12 +22,14 @@ const battingTeamOf = (match: MatchRow) => {
   if (!match.battingFirstId) return null
   const battingFirst = match.battingFirstId === match.teamA.id ? match.teamA : match.teamB
   const bowlingFirst = battingFirst.id === match.teamA.id ? match.teamB : match.teamA
-  return match.currentInnings === 1 ? battingFirst : bowlingFirst
+  // innings 1 and 4 (super over chase) are batted by the side that won the toss to bat
+  return match.currentInnings === 1 || match.currentInnings === 4 ? battingFirst : bowlingFirst
 }
 
 export const MatchCard = ({ match, arenaId, isAuthenticated }: { match: MatchRow; arenaId: string; isAuthenticated: boolean }) => {
   const isSetup = match.status === 'setup'
   const isLive = match.status === 'live'
+  const isCompleted = match.status === 'completed'
 
   // Authorized users score a live match; everyone else just watches it ball by ball.
   const liveHref = isAuthenticated ? `/matches/${match.id}/score?arena=${arenaId}` : `/matches/${match.id}/live?arena=${arenaId}`
@@ -35,7 +37,7 @@ export const MatchCard = ({ match, arenaId, isAuthenticated }: { match: MatchRow
   const dateTime = formatMatchDateTime(isLive ? (match.startedAt ?? match.createdAt) : isSetup ? match.createdAt : (match.completedAt ?? match.createdAt))
 
   const battingTeam = isLive ? battingTeamOf(match) : null
-  const highlight = isLive ? (battingTeam ? `${battingTeam.name} batting` : null) : match.resultText
+  const highlight = isLive ? (battingTeam ? `${battingTeam.name} batting${match.currentInnings >= 3 ? ' (super over)' : ''}` : null) : match.resultText
   const highlightClassName = isLive ? 'text-lime' : 'text-yellow'
 
   const scoreA = isSetup ? undefined : `${match.teamARuns}/${match.teamAWickets}`
@@ -47,7 +49,8 @@ export const MatchCard = ({ match, arenaId, isAuthenticated }: { match: MatchRow
     <Link href={href} className='flex flex-col gap-3 overflow-hidden rounded-xl border-2 border-violet bg-card p-4 min-h-55 hide-scrollbar'>
       <div className='flex justify-between'>
         <div className='text-xs tracking-tight font-(family-name:--font-inter-tight) text-white/50 uppercase'>{dateTime}</div>
-        {isLive && <span className='text-center font-(family-name:--font-inter-tight) text-xs bg-sporty-red uppercase px-3 text-white'>Live</span>}
+        {isLive && <span className='text-center font-(family-name:--font-inter-tight) text-xs bg-sporty-red uppercase px-3 py-0.5 rounded text-white font-semibold'>•{'  '}Live</span>}
+        {isCompleted && <span className='text-center font-(family-name:--font-inter-tight) text-xs bg-green uppercase px-3 py-0.5 rounded text-black font-semibold'>Completed</span>}
       </div>
       <div className='flex gap-4'>
         <TeamColumn team={match.teamA} overs={oversA} score={scoreA} />

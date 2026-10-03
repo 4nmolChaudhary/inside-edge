@@ -50,7 +50,6 @@ export const StepToss = ({ arenaId, match, teamA, teamB }: { arenaId: string; ma
           ))}
         </div>
       </div>
-      {battingFirst && <div className='text-center text-lg text-white/70 uppercase'>{battingFirst.name} bat first</div>}
       <div className='flex w-full justify-center pt-2'>
         <Button type='button' text='Start Match' loadingText='Starting...' loading={isPending} disabled={!valid} onClick={submit} />
       </div>
