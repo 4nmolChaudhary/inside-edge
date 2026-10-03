@@ -26,6 +26,7 @@ const matchListSelect = {
   teamBBalls: matches.teamBBalls,
   battingFirstId: matches.battingFirstId,
   resultText: matches.resultText,
+  winnerId: matches.winnerId,
   createdAt: matches.createdAt,
   startedAt: matches.startedAt,
   completedAt: matches.completedAt,
@@ -89,7 +90,6 @@ export const getMatchDetail = async (id: string, arenaId: string) => {
       teamBCaptainId: matches.teamBCaptainId,
       tossWinnerId: matches.tossWinnerId,
       tossDecision: matches.tossDecision,
-      winnerId: matches.winnerId,
     })
     .from(matches)
     .innerJoin(teamA, eq(matches.teamAId, teamA.id))

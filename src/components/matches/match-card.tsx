@@ -2,6 +2,7 @@ import Link from 'next/link'
 
 import { TeamLogo } from '@/components/matches/team-badge'
 import type { getLiveMatchesByArena } from '@/db/queries/matches'
+import { TEAM_COLORS } from '@/constants/images'
 import { formatMatchDateTime, formatOvers } from '@/lib/cricket'
 import { cn } from '@/lib/utils'
 
@@ -38,7 +39,10 @@ export const MatchCard = ({ match, arenaId, isAuthenticated }: { match: MatchRow
 
   const battingTeam = isLive ? battingTeamOf(match) : null
   const highlight = isLive ? (battingTeam ? `${battingTeam.name} batting${match.currentInnings >= 3 ? ' (super over)' : ''}` : null) : match.resultText
-  const highlightClassName = isLive ? 'text-lime' : 'text-yellow'
+  const winner = match.winnerId === match.teamA.id ? match.teamA : match.winnerId === match.teamB.id ? match.teamB : null
+  const winnerColor = winner?.logoUrl ? TEAM_COLORS[winner.logoUrl] : undefined
+  const highlightClassName = isLive ? 'text-lime' : winnerColor ? undefined : 'text-yellow'
+  const highlightStyle = !isLive && winnerColor ? { color: winnerColor } : undefined
 
   const scoreA = isSetup ? undefined : `${match.teamARuns}/${match.teamAWickets}`
   const scoreB = isSetup ? undefined : `${match.teamBRuns}/${match.teamBWickets}`
@@ -57,7 +61,11 @@ export const MatchCard = ({ match, arenaId, isAuthenticated }: { match: MatchRow
         <div className='w-px bg-white/15' />
         <TeamColumn team={match.teamB} overs={oversB} score={scoreB} reverse />
       </div>
-      {highlight && <div className={cn('text-center text-sm uppercase font-(family-name:--font-inter-tight)', highlightClassName)}>{highlight}</div>}
+      {highlight && (
+        <div className={cn('text-center font-semibold text-sm uppercase font-(family-name:--font-inter-tight)', highlightClassName)} style={highlightStyle}>
+          {highlight}
+        </div>
+      )}
       <div className='flex gap-2 bg-violet px-4 pt-2 py-1 text-white rounded-sm justify-center items-center'>
         <span className='text-lg'>MATCH CENTER</span>
       </div>
