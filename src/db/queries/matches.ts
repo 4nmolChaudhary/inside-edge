@@ -139,6 +139,40 @@ export const createMatch = async (input: { arenaId: string; teamAId: string; tea
   }
 }
 
+// New match with the same teams, overs, squads and captains: lands straight on the toss step.
+export const createRematch = async (input: { matchId: string; arenaId: string }) => {
+  if (!(await isAuthorized())) return { error: 'Not authorized' }
+
+  const parsed = z.object({ matchId: z.uuid('Invalid match'), arenaId: z.uuid('Invalid arena') }).safeParse(input)
+  if (!parsed.success) return { error: parsed.error.issues[0].message }
+  const { matchId, arenaId } = parsed.data
+
+  const [source] = await db
+    .select()
+    .from(matches)
+    .where(and(eq(matches.id, matchId), eq(matches.arenaId, arenaId)))
+  if (!source) return { error: 'Match not found' }
+
+  try {
+    const [match] = await db
+      .insert(matches)
+      .values({
+        arenaId,
+        teamAId: source.teamAId,
+        teamBId: source.teamBId,
+        overs: source.overs,
+        teamAPlayerIds: source.teamAPlayerIds,
+        teamBPlayerIds: source.teamBPlayerIds,
+        teamACaptainId: source.teamACaptainId,
+        teamBCaptainId: source.teamBCaptainId,
+      })
+      .returning()
+    return { match }
+  } catch {
+    return { error: 'Could not create match' }
+  }
+}
+
 const squadsSchema = z.object({
   matchId: z.uuid('Invalid match'),
   arenaId: z.uuid('Invalid arena'),

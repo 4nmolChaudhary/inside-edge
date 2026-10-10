@@ -1,6 +1,8 @@
 'use client'
+import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 
+import { useCreateRematch } from '@/api/matches'
 import { useAbandonMatch, useCompleteMatch, useEndInnings, useRecordBall, useStartSuperOver, useUndoBall } from '@/api/scoring'
 import { ActionBar } from '@/components/scorer/action-bar'
 import { CompleteMatchDialog } from '@/components/scorer/complete-match-dialog'
@@ -43,6 +45,9 @@ export const ScorerScreen = ({ arenaId, match }: { arenaId: string; match: Score
   const [saveState, setSaveState] = useState<SaveState>('idle')
   const [dialog, setDialog] = useState<UserDialog>(null)
   const [dismissedPrompt, setDismissedPrompt] = useState<string | null>(null)
+  const [rematchOpen, setRematchOpen] = useState(false)
+  const router = useRouter()
+  const rematch = useCreateRematch({ onSuccess: next => router.push(`/scoring/${next.id}?arena=${arenaId}`) })
 
   const view = useMemo(() => buildMatchView(match, snapshot), [match, snapshot])
   const { state, tokens, innings, battingTeam, bowlingTeam, battingFirst, bowlingFirst } = view
@@ -135,7 +140,7 @@ export const ScorerScreen = ({ arenaId, match }: { arenaId: string; match: Score
     setDialog(null)
     setDismissedPrompt(null)
     if (innings === 1 || innings === 3) end.mutate({ matchId: match.id, arenaId })
-    else complete.mutate({ matchId: match.id, arenaId })
+    else complete.mutate({ matchId: match.id, arenaId }, { onSuccess: result => !result.error && setRematchOpen(true) })
   }
 
   const preview = useMemo(() => {
@@ -202,6 +207,15 @@ export const ScorerScreen = ({ arenaId, match }: { arenaId: string; match: Score
       )}
 
       <MatchDetails view={view} />
+
+      <ConfirmDialog
+        open={rematchOpen}
+        onOpenChange={setRematchOpen}
+        title='Match over'
+        description='Start a new match with the same teams?'
+        confirmText='Same teams'
+        onConfirm={() => rematch.mutate({ matchId: match.id, arenaId })}
+      />
 
       {live && (
         <>

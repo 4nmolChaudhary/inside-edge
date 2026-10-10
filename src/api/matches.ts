@@ -1,11 +1,29 @@
 import { useMutation } from '@tanstack/react-query'
-import { createMatch, updateMatchSquads, updateMatchToss } from '@/db/queries/matches'
+import { createMatch, createRematch, updateMatchSquads, updateMatchToss } from '@/db/queries/matches'
 import { toast } from '@/components/ui/toast'
 
 export const useCreateMatch = ({ onSuccess }: { onSuccess?: (match: NonNullable<Awaited<ReturnType<typeof createMatch>>['match']>) => void } = {}) => {
   return useMutation({
     mutationFn: async (input: Parameters<typeof createMatch>[0]) => {
       const result = await createMatch(input)
+      if (result.error || !result.match) throw new Error(result.error ?? 'Could not create match')
+      return result.match
+    },
+    onMutate: () => toast.add({ type: 'loading', title: 'Creating match...', timeout: 0 }),
+    onSuccess: (match, _input, toastId) => {
+      if (toastId) toast.update(toastId, { type: 'success', title: 'Match created', timeout: 3000 })
+      onSuccess?.(match)
+    },
+    onError: (error, _input, toastId) => {
+      if (toastId) toast.update(toastId, { type: 'error', title: error.message, timeout: 5000, priority: 'high' })
+    },
+  })
+}
+
+export const useCreateRematch = ({ onSuccess }: { onSuccess?: (match: NonNullable<Awaited<ReturnType<typeof createRematch>>['match']>) => void } = {}) => {
+  return useMutation({
+    mutationFn: async (input: Parameters<typeof createRematch>[0]) => {
+      const result = await createRematch(input)
       if (result.error || !result.match) throw new Error(result.error ?? 'Could not create match')
       return result.match
     },
